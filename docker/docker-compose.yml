@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  monitor:
+    build:
+      context: ./monitoring
+    container_name: monitor_container
+    environment:
+      - PERIOD=5
+    volumes:
+      - ./shared-logs:/app/logs
+    restart: unless-stopped
+
+  backup:
+    build:
+      context: ./backup
+    container_name: backup_container
+    environment:
+      - BACKUP_INTERVAL=5
+      - BACKUP_DIR=/app/backup
+    volumes:
+      - ./shared-logs:/app/logs
+      - ./backup/docker-backup:/app/backup
+    restart: unless-stopped
